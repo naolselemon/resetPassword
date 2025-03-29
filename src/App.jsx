@@ -3,7 +3,7 @@ import { Client, Account } from 'appwrite';
 
 const client = new Client()
   .setEndpoint('https://cloud.appwrite.io/v1') 
-  .setProject(process.env.PROJECT_ID);
+  .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 const account = new Account(client);
 
 function ResetPassword() {
@@ -16,6 +16,7 @@ function ResetPassword() {
     const urlParams = new URLSearchParams(window.location.search);
     setUserId(urlParams.get('userId'));
     setSecret(urlParams.get('secret'));
+    console.log('URL Params:', { userId: urlParams.get('userId'), secret: urlParams.get('secret') });
   }, []);
 
   const handleReset = async () => {
@@ -23,7 +24,10 @@ function ResetPassword() {
       await account.updateRecovery(userId, secret, newPassword);
       setMessage('Password reset successful! Return to the app to log in.');
     } catch (error) {
+
+      console.error('Reset error:', error); // Log full error object
       setMessage(`Error: ${error.message}`);
+     
     }
   };
 
